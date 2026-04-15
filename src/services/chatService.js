@@ -256,7 +256,7 @@ Answer concisely using specific details from the data. Use markdown formatting.`
             repeat_penalty: 1.2
           }
         },
-        { timeout: 60000 }
+        { timeout: 6000000 }
       );
 
       const answer = ollamaResponse.data.response.trim();
