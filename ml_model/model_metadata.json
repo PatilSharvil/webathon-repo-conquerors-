@@ -1,0 +1,58 @@
+{
+  "feature_columns": [
+    "num_owners",
+    "recent_transfers",
+    "avg_transfer_interval",
+    "has_inheritance",
+    "num_active_loans",
+    "num_closed_loans",
+    "total_loan_amount",
+    "num_defaults",
+    "loan_to_value",
+    "num_active_disputes",
+    "num_resolved_disputes",
+    "dispute_severity",
+    "has_legal_case",
+    "dispute_age_days",
+    "property_age",
+    "property_area",
+    "location_risk",
+    "has_clear_title",
+    "zone_risk",
+    "property_type"
+  ],
+  "label_encoders": {
+    "property_type": [
+      "Agricultural",
+      "Commercial",
+      "Industrial",
+      "Residential"
+    ]
+  },
+  "metrics": {
+    "validation": {
+      "dataset": "Validation",
+      "mse": 106.13125218235007,
+      "rmse": 10.30200233849469,
+      "mae": 8.354341649999578,
+      "r2_score": 0.6105966853354159,
+      "explained_variance": 0.6144689655192288,
+      "timestamp": "2026-04-15T13:02:53.751535"
+    },
+    "test": {
+      "dataset": "Test",
+      "mse": 84.38948387728297,
+      "rmse": 9.186374904024055,
+      "mae": 7.217013736305709,
+      "r2_score": 0.673415922262756,
+      "explained_variance": 0.6737414243767982,
+      "timestamp": "2026-04-15T13:02:53.782253",
+      "cv_mean_r2": 0.544738291377957,
+      "cv_std_r2": 0.07544865630173407
+    }
+  },
+  "model_type": "RandomForestRegressor",
+  "trained_at": "2026-04-15T13:02:56.354456",
+  "algorithm": "Random Forest",
+  "version": "1.0.0"
+}

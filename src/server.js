@@ -8,6 +8,7 @@ import searchRoutes from './routes/searchRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import temporalRoutes from './routes/temporalRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import mlRiskRoutes from './routes/mlRiskRoutes.js';
 
 dotenv.config();
 await connectDB();
@@ -26,6 +27,7 @@ app.use('/api/search', searchRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/temporal', temporalRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/ml-risk', mlRiskRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
