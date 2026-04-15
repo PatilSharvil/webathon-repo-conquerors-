@@ -7,6 +7,7 @@ import riskRoutes from './routes/riskRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import temporalRoutes from './routes/temporalRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 
 dotenv.config();
 await connectDB();
@@ -24,6 +25,7 @@ app.use('/api/risk', riskRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/temporal', temporalRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
