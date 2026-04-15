@@ -1,0 +1,22 @@
+{
+  "name": "intelligent-land-analysis",
+  "version": "1.0.0",
+  "description": "AI-assisted intelligent land analysis system for property evaluation and risk assessment",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "client": "cd client && npm run dev",
+    "client:install": "cd client && npm install"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1",
+    "axios": "^1.6.5"
+  }
+}

@@ -1,0 +1,8 @@
+node_modules/
+.playwright-mcp/
+dist/
+.env
+*.log
+.DS_Store
+src/uploads/*
+!src/uploads/.gitkeep
