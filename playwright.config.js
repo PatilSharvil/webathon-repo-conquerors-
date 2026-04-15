@@ -17,5 +17,9 @@ export default defineConfig({
       name: 'ML Model Tests',
       testMatch: /ml-model-verification\.spec\.js/,
     },
+    {
+      name: 'ML Web Tests',
+      testMatch: /ml-risk-mcp-web\.spec\.js/,
+    },
   ],
 });
