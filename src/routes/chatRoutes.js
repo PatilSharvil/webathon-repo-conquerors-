@@ -6,6 +6,7 @@ const router = express.Router();
 // Store conversation history per session
 const sessions = new Map();
 
+// Chat endpoint - uses Groq API for fast responses
 router.post('/', async (req, res) => {
   try {
     const { message, sessionId } = req.body;
@@ -22,7 +23,7 @@ router.post('/', async (req, res) => {
     // Add user message
     history.push({ role: 'user', content: message });
 
-    // Get AI response
+    // Get AI response from Groq
     const result = await chatService.chat(message, sid);
 
     // Add AI response to history
@@ -36,8 +37,7 @@ router.post('/', async (req, res) => {
     res.json({
       answer: result.answer,
       source: result.source,
-      model: result.model || process.env.OLLAMA_MODEL || null,
-      intent: result.intent || null,
+      model: result.model,
       propertiesReferenced: result.propertiesReferenced,
       confidence: result.confidence,
       sessionId: sid
