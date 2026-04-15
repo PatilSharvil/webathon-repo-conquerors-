@@ -76,34 +76,49 @@ class ChatService {
   }
 
   // Classify the intent of the user's query
+  // Uses strict phrase matching so complex/analytical queries fall through to Ollama
   classifyIntent(query) {
-    const lower = query.toLowerCase();
-    
-    if (lower.includes('how many') || lower.includes('total') || lower.includes('count')) {
+    const lower = query.toLowerCase().trim();
+
+    // Only match if the query is clearly a simple, direct question
+    // Complex/analytical queries should fall through to 'general' → Ollama
+
+    // Count queries - must be simple counting questions
+    if (/^(how many|total|count|number of)/i.test(lower) && lower.split(' ').length < 10) {
       return { type: 'count', keywords: lower };
     }
-    if (lower.includes('risk') || lower.includes('danger') || lower.includes('safe') || lower.includes('trust')) {
+
+    // Risk queries - must explicitly ask about risk levels
+    if (/(high risk|low risk|medium risk|critical risk|safe property|risk level|risk score)/i.test(lower)) {
       return { type: 'risk_query', keywords: lower };
     }
-    if (lower.includes('loan') || lower.includes('debt') || lower.includes('mortgage') || lower.includes('bank')) {
+
+    // Loan queries - must explicitly ask about loans
+    if (/^(show|list|find|which).*(loan|debt|mortgage)/i.test(lower) || /(active loan|has.*loan|with.*loan)/i.test(lower)) {
       return { type: 'loan_query', keywords: lower };
     }
-    if (lower.includes('dispute') || lower.includes('court') || lower.includes('legal') || lower.includes('conflict')) {
+
+    // Dispute queries - must explicitly ask about disputes
+    if (/^(show|list|find|which).*(dispute|court|conflict)/i.test(lower) || /(has.*dispute|with.*dispute|active dispute)/i.test(lower)) {
       return { type: 'dispute_query', keywords: lower };
     }
-    if (lower.includes('owner') || lower.includes('belong') || lower.includes('property of')) {
+
+    // Ownership queries - must be simple ownership questions
+    if (/^(who owns|ownership of|property of|belong to)/i.test(lower) && lower.split(' ').length < 12) {
       return { type: 'ownership_query', keywords: lower };
     }
-    if (lower.includes('location') || lower.includes('where') || lower.includes('in pune') || lower.includes('in nashik') || lower.includes('in nagpur')) {
+
+    // Location queries - must explicitly ask about locations
+    if (/^(where|location|properties in|in pune|in nashik|in nagpur)/i.test(lower) && lower.split(' ').length < 12) {
       return { type: 'location_query', keywords: lower };
     }
-    if (lower.includes('compare') || lower.includes('difference') || lower.includes('versus') || lower.includes('vs')) {
-      return { type: 'comparison', keywords: lower };
-    }
-    if (lower.includes('list') || lower.includes('show all') || lower.includes('all properties') || lower === 'properties') {
+
+    // List all - must be a simple listing request
+    if (/^(show all|list all|all properties|list properties|show properties$)/i.test(lower)) {
       return { type: 'list_all', keywords: lower };
     }
 
+    // Everything else goes to Ollama with full context
     return { type: 'general', keywords: lower };
   }
 
@@ -210,39 +225,38 @@ class ChatService {
         return {
           answer: directAnswer,
           source: 'direct',
+          intent: intent.type,
           propertiesReferenced: propertyCount,
           confidence: 1.0
         };
       }
 
-      // Step 4: Use LLM with retrieved context
-      const systemPrompt = `You are LandIntel AI, an intelligent property analysis assistant. 
+      // Step 4: Use LLM with retrieved context (RAG)
+      // Truncate context to avoid overwhelming smaller models
+      const truncatedContext = context.length > 4000 ? context.substring(0, 4000) + '\n...(truncated)' : context;
 
-IMPORTANT RULES:
-1. ONLY answer based on the property data provided in the context below.
-2. If the question cannot be answered from the data, say "I don't have enough data in the property database to answer that."
-3. Be specific - mention survey numbers, owner names, and exact figures.
-4. Format your answer with markdown for readability.
-5. If asked about risk, mention the number of disputes, active loans, and ownership transfer frequency.
-6. Keep answers concise and factual.
+      const prompt = `You are LandIntel AI, a property data analyst. Answer ONLY using facts from the data below.
 
-CURRENT DATABASE: ${propertyCount} properties loaded.`;
+PROPERTY DATA:
+${truncatedContext}
 
-      const userPrompt = `User Question: ${query}\n\nProperty Data:\n${context}`;
+USER QUESTION: ${query}
+
+Answer concisely using specific details from the data. Use markdown formatting.`;
 
       const ollamaResponse = await axios.post(
         `${process.env.OLLAMA_BASE_URL}/api/generate`,
         {
-          model: process.env.OLLAMA_MODEL || 'gemma2:2b',
-          prompt: `${systemPrompt}\n\n${userPrompt}`,
+          model: process.env.OLLAMA_MODEL || 'gemma4:e2b',
+          prompt: prompt,
           stream: false,
           options: {
             temperature: 0.3,
-            num_predict: 500,
+            num_predict: 300,
             repeat_penalty: 1.2
           }
         },
-        { timeout: 30000 }
+        { timeout: 60000 }
       );
 
       const answer = ollamaResponse.data.response.trim();
@@ -250,7 +264,8 @@ CURRENT DATABASE: ${propertyCount} properties loaded.`;
       return {
         answer,
         source: 'ollama',
-        model: process.env.OLLAMA_MODEL || 'gemma2:2b',
+        intent: intent.type,
+        model: process.env.OLLAMA_MODEL || 'gemma4:e4b',
         propertiesReferenced: propertyCount,
         confidence: 0.85
       };

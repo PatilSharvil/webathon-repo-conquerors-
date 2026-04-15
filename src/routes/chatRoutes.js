@@ -36,7 +36,8 @@ router.post('/', async (req, res) => {
     res.json({
       answer: result.answer,
       source: result.source,
-      model: result.model || null,
+      model: result.model || process.env.OLLAMA_MODEL || null,
+      intent: result.intent || null,
       propertiesReferenced: result.propertiesReferenced,
       confidence: result.confidence,
       sessionId: sid

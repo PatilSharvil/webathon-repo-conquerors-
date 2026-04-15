@@ -178,8 +178,9 @@ export default function Chat() {
                       </div>
                     )}
                     {msg.source === 'ollama' && (
-                      <div className="mt-3 pt-2 border-t border-beige/30 flex items-center gap-2">
-                        <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">AI Generated</span>
+                      <div className="mt-3 pt-2 border-t border-beige/30 flex items-center gap-2 flex-wrap">
+                        <span className="text-xs bg-gradient-to-r from-orange-accent/15 to-orange-warm/10 text-orange-accent px-2 py-0.5 rounded-full font-medium">🤖 AI Generated</span>
+                        {msg.model && <span className="text-xs bg-beige/40 text-brown-medium px-2 py-0.5 rounded-full">{msg.model}</span>}
                         <span className="text-xs text-brown/40">{msg.propertiesReferenced} properties • {(msg.confidence * 100).toFixed(0)}% confidence</span>
                       </div>
                     )}
