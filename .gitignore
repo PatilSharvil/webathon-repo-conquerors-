@@ -17,3 +17,6 @@ ml_model/.venv/
 test-results/
 playwright-report/
 
+# Claude settings
+.claude/settings.local.json
+

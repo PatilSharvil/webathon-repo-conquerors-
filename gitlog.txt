@@ -1,0 +1,8 @@
+﻿a5981ab6ffd1d5145c883e47aef489d4b1397b9f Merge remote-tracking branch 'origin/main' - resolve package.json conflict
+d57848d111322f9f7c4294adfdebe6fdff787732 feat: migrate chat from Ollama to Groq API
+da409771ca7fa8d239aef52eae3cec875fe0bdbd test: add Playwright MCP web tests for ML risk assessment
+1a7e2dccd63fdcae61ad2bccdc0087581b91b407 feat: add ML-based Risk Assessment model with Random Forest algorithm
+10a23979e31cee8cc7b6d07ca47b70c9584953c6 increased the timeout for the ollama model response
+8e6289403b1166335abd3d8ecf628ad5ee6c53c2 feat: switch Ollama to gemma4:e2b, improve chat RAG pipeline
+e7e9e62d6e6e129cea4c134dd4d71fcd9facd313 feat: add AI Property Chat with RAG system
+6e05f9de81b9337adf50051558de42a8a3bdce39 feat: complete intelligent land analysis system with gradient UI
