@@ -6,3 +6,14 @@ dist/
 .DS_Store
 src/uploads/*
 !src/uploads/.gitkeep
+
+# ML Model artifacts
+ml_model/__pycache__/
+ml_model/venv/
+ml_model/.venv/
+*.pyc
+
+# Test results
+test-results/
+playwright-report/
+
